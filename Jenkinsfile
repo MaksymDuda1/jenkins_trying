@@ -1,42 +1,39 @@
 pipeline {
-  agent any
-  
-  environment {
-    registry = "docker.io"
-    registryCredential = 'new_id'
-    dockerImage = ''
-    dockerfile = 'Dockerfile'
-    imageName = 'maksi123/lab1'
-    imageTag = 'latest'
-    gitRepo = 'https://github.com/MaksymDuda1/jenkins_trying.git'
-  }
-  
-  stages {
-    stage('Build Docker Image') {
-      steps {
-        script {
-          // Login to Docker Hub
-          withCredentials([usernamePassword(credentialsId: "${registryCredential}", passwordVariable: 'Deodorantstick1', usernameVariable: 'maksi123')]) {
-            sh "docker login -u ${username} -p ${password} ${registry}"
-          }
-          
-          // Clone Git repository
-          sh "git clone ${gitRepo}"
-          
-          // Build Docker image
-          dockerImage = docker.build("${registry}/${imageName}:${imageTag}", "--file ${dockerfile} ./jenkins_trying")
+    agent any
+    stages {
+        stage('Docker version') {
+            steps {
+                sh '''
+                    echo $USER
+                    docker version
+                '''
+            }
         }
-      }
-    }
-    
-    stage('Push Docker Image') {
-      steps {
-        script {
-          // Push Docker image to Docker Hub
-          dockerImage.push()
+        stage('Build docker image') {
+            steps {
+                sh '''
+                    docker build -t maksi123/jenkins_trying .
+                '''
+            }
+            
         }
-      }
-    }
-  }
+        stage('docker login'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'new_id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])  {
+            sh"""
+            docker login -u $USERNAME -p $PASSWORD
+            """
+                }
+            }
+        }
+        
+        stage('Push docker image to DockerHub') {
+            steps {
+                    sh '''
+                        docker push maksi123/jenkins_trying
+                    '''
+                    
+                }
+            }
+        }
 }
-
