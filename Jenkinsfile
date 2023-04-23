@@ -3,7 +3,7 @@ pipeline {
   
   environment {
     registry = "docker.io"
-    registryCredential = '1'
+    registryCredential = 'new_id'
     dockerImage = ''
     dockerfile = 'Dockerfile'
     imageName = 'maksi123/lab1'
