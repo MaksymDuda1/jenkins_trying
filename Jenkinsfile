@@ -6,6 +6,7 @@ pipeline {
             steps {
 		script{
 		   docker build -t maksi123/lab1 .
+		   }
 		}
             }
         }
