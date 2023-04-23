@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    enviroment{
+    environment{
 	dockerImage =''
 	registry ='maksi123/lab1'
 	}
